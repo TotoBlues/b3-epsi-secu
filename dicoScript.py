@@ -1,17 +1,24 @@
 #!/usr/bin/python3
 
+import time
+import hashlib
+
 fd = open('shadow');
+passFile = open('passFile.txt', 'a');
 dicoFd = open('dico_mini_fr');
 tabPasswd = [];
 
-for line in fd:
-    i = 0;
-    c = 0;
+def parseChar(line):
     line = line.replace('$', ':');
     line = line.replace('::', ':');
     line = line.replace('::', ':');
     line = line.rstrip(" \n");
-    print(line);
+    return line
+
+for line in fd:
+    i = 0;
+    c = 0;
+    line = parseChar(line);
     for char in line:
         if (char == ':'):
             i += 1;
@@ -19,9 +26,19 @@ for line in fd:
             line = line[:c];
         c += 1;
     tabPasswd.append(line.split(':'));
+tabPasswd.pop();
 
-for elm in tabPasswd: 
-    print(elm);
+for line in dicoFd:
+    start = time.time();
+    for elm in tabPasswd:
+        if (elm[1] == "1"):
+            h = hashlib.md5(line.encode("UTF-8").strip()).hexdigest();
+            if (h == elm[2]):
+                end = time.time();
+                str = "The good passwd is " + line.strip() + " for " + elm[0].strip() + " " + '%.2gs' % (end - start) + " sec";
+                print(str);
+                passFile.write(str);
 
 dicoFd.close();
+passFile.close();
 fd.close();
