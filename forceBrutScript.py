@@ -1,12 +1,17 @@
 #!/usr/bin/python3
 
+import hashlib
+import time
+from itertools import product
+
 fd = open('shadow');
 tabPasswd = [];
 
-charList = 'abcdefghijklmnopqrstuvwxyz';
-charList += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-charList += '0123456789';
-charList += '@_#';
+#abcdefghijklmnopqrstuvwxyz
+charList = 'brazil';
+#charList += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+#charList += '0123456789';
+#charList += '@_#';
 
 complete_list = [];
 
@@ -30,10 +35,18 @@ for line in fd:
     tabPasswd.append(line.split(':'));
 tabPasswd.pop();
 
-for current in range(5,12):
-    a = [i for i in charList];
-    for y in range(current):
-        a = [x + i for i in charList for x in a];
-    complete_list = complete_list + a;
-    print(complete_list);
+i = 0;
+
+for length in range(6, 7):
+    to_attempt = product(charList, repeat=length);
+    for elm in tabPasswd:
+        for attempt in to_attempt:
+            i += 1;
+            mdp = ''.join(attempt);
+            if (elm[1] == "1"):
+                h = hashlib.md5(mdp.encode("UTF-8").strip()).hexdigest();
+                print(h, elm[2], mdp);
+                if (h == elm[2]):
+                    print(mdp);
+
 fd.close();
