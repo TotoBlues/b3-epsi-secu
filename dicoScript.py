@@ -4,7 +4,7 @@ import time
 import hashlib
 
 fd = open('shadow');
-passFile = open('passFile.txt', 'a');
+passFile = open('passFile.txt', 'w');
 dicoFd = open('dico_mini_fr');
 tabPasswd = [];
 
@@ -35,8 +35,8 @@ for line in dicoFd:
             h = hashlib.md5(line.encode("UTF-8").strip()).hexdigest();
             if (h == elm[2]):
                 end = time.time();
-                str = "The good passwd is " + line.strip() + " for " + elm[0].strip() + " " + '%.2gs' % (end - start) + " sec";
-                print(str);
+                str = "The good passwd is " + line.strip() + " for " + elm[0].strip() + " " + '%.2gs' % (end - start) + " sec\n";
+                print(str.strip());
                 passFile.write(str);
 
 dicoFd.close();
