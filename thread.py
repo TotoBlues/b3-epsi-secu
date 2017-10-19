@@ -28,7 +28,7 @@ class decrypte(Thread):
                         end = time.time();
                         str = "The good passwd is " + mdp.strip() + " for " + self.shadowLine[0].strip() + " " + '%.2gs' % (end - start) + " sec\n";
                         print(str.strip())
-                        passFile = open('passFileBrut.txt', 'w')
+                        passFile = open('passFileBrut.txt', 'a')
                         passFile.write(str)
                         passFile.close()
 
