@@ -2,18 +2,17 @@
 
 import sys
 import hashlib
-import time
-from itertools import product
+from thread import decrypte
+
 
 fd = open('shadow');
 tabPasswd = [];
+mThread = []
 
-
-#abcdefghijklmnopqrstuvwxyz
-charList = 'brazil';
-#charList += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-#charList += '0123456789';
-#charList += '@_#';
+charList = 'abcdefghijklmnopqrstuvwxyz';
+charList += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+charList += '0123456789';
+charList += '@_#';
 
 complete_list = [];
 
@@ -37,7 +36,17 @@ for line in fd:
     tabPasswd.append(line.split(':'));
 tabPasswd.pop();
 
-for length in range(6, 7):
+for elm in tabPasswd:
+    if (elm[1] == "1"):
+        mThread.append(decrypte(charList, elm));
+    
+for elm in mThread:
+    elm.start();
+for elm in mThread:
+    elm.join();
+
+'''
+for length in range(6, 12):
     to_attempt = product(charList, repeat=length);
     for elm in tabPasswd:
         start = time.time();
@@ -51,5 +60,5 @@ for length in range(6, 7):
                     str = "The good passwd is " + mdp.strip() + " for " + elm[0].strip() + " " + '%.2gs' % (end - start) + " sec\n";
                     print(str.strip());
                     passFile.write(str);
-
+'''
 fd.close();
