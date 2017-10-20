@@ -1,64 +1,63 @@
 #!/usr/bin/python3
 
+
+import argparse
+import sys
+import getopt
 import sys
 import hashlib
 from thread import decrypte
 
+charList = 'abcdefghijklmnopqrstuvwxyz'
+charList += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+charList += '0123456789'
+charList += '@_#'
 
-fd = open('shadow');
-tabPasswd = [];
-mThread = []
-
-charList = 'abcdefghijklmnopqrstuvwxyz';
-charList += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-charList += '0123456789';
-charList += '@_#';
-
-complete_list = [];
-
+# Permet le parsing du fichier (Shadow)
 def parseChar(line):
-    line = line.replace('$', ':');
-    line = line.replace('::', ':');
-    line = line.replace('::', ':');
-    line = line.rstrip(" \n");
+    line = line.replace('$', ':')
+    line = line.replace('::', ':')
+    line = line.replace('::', ':')
+    line = line.rstrip(" \n")
     return line
 
-for line in fd:
-    i = 0;
-    c = 0;
-    line = parseChar(line);
-    for char in line:
-        if (char == ':'):
-            i += 1;
-        if (i == 3):
-            line = line[:c];
-        c += 1;
-    tabPasswd.append(line.split(':'));
-tabPasswd.pop();
-
-for elm in tabPasswd:
-    if (elm[1] == "1"):
-        mThread.append(decrypte(charList, elm));
+# Algo qui met dans un tableau les elements pouvant être décrypté
+def makeList(fd):
+    tabPasswd = []
     
-for elm in mThread:
-    elm.start();
-for elm in mThread:
-    elm.join();
+    for line in fd:
+        i = 0
+        c = 0
+        line = parseChar(line)
+        for char in line:
+            if (char == ':'):
+                i += 1
+            if (i == 3):
+                line = line[:c]
+            c += 1
+        tabPasswd.append(line.split(':'))
+    tabPasswd.pop()
+    threadFct(tabPasswd)
+            
+# Création/départ/arrêt des thread
+def threadFct(tabPasswd):
+    mThread = []
 
-'''
-for length in range(6, 12):
-    to_attempt = product(charList, repeat=length);
     for elm in tabPasswd:
-        start = time.time();
-        for attempt in to_attempt:
-            mdp = "".join(attempt);
-            if (elm[1] == "1"):
-                h = hashlib.md5(mdp.encode("UTF-8").strip()).hexdigest();
-                if (h == elm[2]):
-                    end = time.time();
-                    print(mdp);
-                    str = "The good passwd is " + mdp.strip() + " for " + elm[0].strip() + " " + '%.2gs' % (end - start) + " sec\n";
-                    print(str.strip());
-                    passFile.write(str);
-'''
-fd.close();
+        mThread.append(decrypte(charList, elm));
+    for elm in mThread:
+        elm.start();
+    for elm in mThread:
+        elm.join();
+
+
+def main(argv):
+    if (len(argv) < 1):
+        print("Usage : ./dicoScrypt [File]")
+        return 2
+    with open(argv[0]) as fd:
+        makeList(fd)
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:])) # Quitte proprement le programme avec les erreus convenue
