@@ -42,9 +42,11 @@ def makeList(fd):
 # Création/départ/arrêt des thread
 def threadFct(tabPasswd):
     mThread = []
-
+    i = 0
+    
     for elm in tabPasswd:
-        mThread.append(decrypte(charList, elm));
+        mThread.append(decrypte(charList, elm, str(i)));
+        i += 1
     for elm in mThread:
         elm.start();
     for elm in mThread:
