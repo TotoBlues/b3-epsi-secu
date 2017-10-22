@@ -45,8 +45,9 @@ def threadFct(tabPasswd):
     i = 0
     
     for elm in tabPasswd:
-        mThread.append(decrypte(charList, elm, str(i)));
-        i += 1
+        if (elm[1] != '*' and elm[1] != '!'):
+            mThread.append(decrypte(charList, elm, str(i)));
+            i += 1
     for elm in mThread:
         elm.start();
     for elm in mThread:
