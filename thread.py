@@ -28,7 +28,7 @@ class decrypte(Thread):
         find = False
         i = 0
         
-        for length in range(6, 13):
+        for length in range(12, 13):
             if (find == False):
                 to_attempt = product(self.charList, repeat=length);
                 start = time.time();

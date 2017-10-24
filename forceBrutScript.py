@@ -56,7 +56,7 @@ def threadFct(tabPasswd):
 
 def main(argv):
     if (len(argv) < 1):
-        print("Usage : ./dicoScrypt [File]")
+        print("Usage : ./forceBrutScript [File]")
         return 2
     with open(argv[0]) as fd:
         makeList(fd)
