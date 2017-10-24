@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-
-import argparse
-import sys
-import getopt
 import sys
 import hashlib
 from thread import decrypte
